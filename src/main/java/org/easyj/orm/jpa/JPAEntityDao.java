@@ -12,11 +12,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.PropertyValueException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class JPAEntityDao {
     @PersistenceContext
     private EntityManager em;
 
-    protected Log logger = LogFactory.getLog(getClass());
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Persiste a entidade no banco de dados de acordo com o mapeamento do JPA
@@ -43,9 +43,9 @@ public class JPAEntityDao {
         T newT = null;
         if(t != null) {
             try {
-                logger.debug("Saving entity: " + t.getClass().getSimpleName() + " [" + t.toString() + "]");
+                logger.debug("Saving entity: {} [{}]", t.getClass().getSimpleName(), t.toString());
                 newT = merge(t);
-                logger.debug("Entity saved successfully: " + t.getClass().getSimpleName() + " [" + newT + "]");
+                logger.debug("Entity saved successfully: {} [{}]", t.getClass().getSimpleName(), newT);
             } catch(EntityExistsException e) {
                 logger.error("Error saving entity: Entity already exists");
                 throw e;
@@ -56,7 +56,7 @@ public class JPAEntityDao {
                 String msg;
                 if(e.getCause() instanceof ConstraintViolationException) {
                     msg = e.getCause().getCause().getMessage();
-                    logger.error("Error saving entity: some constraint violation occurred: [" + t.toString() + "] - " + msg);
+                    logger.error("Error saving entity: some constraint violation occurred: [{}] - {}", t.toString(), msg);
                     if(msg.toLowerCase().indexOf("duplicate") > -1) {
                         throw new EntityExistsException(msg);
                     } else {
@@ -110,15 +110,15 @@ public class JPAEntityDao {
     public <T> T loadSingleByNamedQuery(String query, Class<T> klazz, Map<String, Object> params) {
         T t = null;
         try {
-            logger.debug("Loading single entity " + klazz.getSimpleName() + " using @NamedQuery=[" + query + "], params=[" + params + "]");
+            logger.debug("Loading single entity {} using @NamedQuery=[{}], params=[{}]", new Object[] {klazz.getSimpleName(), query, params});
             t = (T) getSingleResultByNamedQuery(query, params);
-            logger.debug("Entity loaded successfully: " + klazz.getSimpleName() + " [" + t + "]");
+            logger.debug("Entity loaded successfully: {} [{}]", klazz.getSimpleName(), t);
         } catch(IllegalArgumentException e) {
-            logger.error("Entity not loaded: Could not find @NamedQuery=[" + query + "] or @NamedQuery is invalid", e);
+            logger.error("Entity not loaded: Could not find @NamedQuery=[{}] or @NamedQuery is invalid", query, e);
         } catch(NoResultException e) {
-            logger.info("Entity not loaded: @NamedQuery=[" + query + "], params=[" + params + "] returned nothing");
+            logger.info("Entity not loaded: @NamedQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
-            logger.error("Entity not loaded: No unique result found for @NamedQuery=[" + query + "] with params=[" + params + "].");
+            logger.error("Entity not loaded: No unique result found for @NamedQuery=[{}] with params=[{}].", query, params);
         }
         return t;
     }
@@ -127,15 +127,15 @@ public class JPAEntityDao {
     public <T> T loadSingleByQuery(String query, Class<T> klazz, Map<String, Object> params) {
         T t = null;
         try {
-            logger.debug("Loading single entity " + klazz.getSimpleName() + " using JPQuery=[" + query + "], params=[" + params + "]");
+            logger.debug("Loading single entity {} using JPQuery=[{}], params=[{}]", new Object[] {klazz.getSimpleName(), query, params});
             t = (T) getSingleResultByQuery(query, params);
-            logger.debug("Entity loaded successfully: " + klazz.getSimpleName() + " [" + t + "]");
+            logger.debug("Entity loaded successfully: {} [{}]", klazz.getSimpleName(), t);
         } catch(IllegalArgumentException e) {
-            logger.error("Entity not loaded: Invalid JPQuery=[" + query + "]", e);
+            logger.error("Entity not loaded: Invalid JPQuery=[{}]", query, e);
         } catch(NoResultException e) {
-            logger.info("Entity not loaded: JPQuery=[" + query + "], params=[" + params + "] returned nothing");
+            logger.info("Entity not loaded: JPQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
-            logger.error("Entity not loaded: No unique result found for JPQuery=[" + query + "] with params=[" + params + "].");
+            logger.error("Entity not loaded: No unique result found for JPQuery=[{}] with params=[{}].", query, params);
         }
         return t;
     }
@@ -144,13 +144,13 @@ public class JPAEntityDao {
     public Object loadSingleByNativeQuery(String query, Map<String, Object> params) {
         Object o = null;
         try {
-            logger.debug("Loading single entity using NativeQuery=[" + query + "], params=[" + params + "]");
+            logger.debug("Loading single entity using NativeQuery=[{}], params=[{}]", query, params);
             o = getSingleResultByNativeQuery(query, params);
-            logger.debug("Query loaded successfully: NativeQuery=[" + query + "], object=[" + o + "]");
+            logger.debug("Query loaded successfully: NativeQuery=[{}], object=[{}]", query, o);
         } catch (NoResultException e) {
-            logger.info("Query not loaded: NativeQuery=[" + query + "] with params=[" + params + "] returned nothing");
+            logger.info("Query not loaded: NativeQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
-            logger.error("Query not loaded: No unique result found for NativeQuery=[" + query + "] with params=[" + params + "].");
+            logger.error("Query not loaded: No unique result found for NativeQuery=[{}] with params=[{}].", query, params);
         }
         return o;
     }
@@ -159,34 +159,34 @@ public class JPAEntityDao {
     public <T> T loadSingleByNativeQuery(String query, Class<T> klazz, Map<String, Object> params) {
         T t = null;
         try {
-            logger.debug("Loading entity " + klazz.getSimpleName() + " using NativeQuery=[" + query + "], params=[" + params + "]");
+            logger.debug("Loading single entity {} using NativeQuery=[{}], params=[{}]", new Object[] {klazz.getSimpleName(), query, params});
             t = (T) getSingleResultByNativeQuery(query, params);
-            logger.debug("Entity loaded successfully: " + klazz.getSimpleName() + " [" + t + "]");
+            logger.debug("Entity loaded successfully: {} [{}]", klazz.getSimpleName(), t);
         } catch (NoResultException e) {
-            logger.info("Entity not loaded: NativeQuery=[" + query + "], params=[" + params + "] returned nothing");
+            logger.info("Entity not loaded: NativeQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
-            logger.error("Entity not loaded: No unique result found for NativeQuery=[" + query + "] with params=[" + params + "].");
+            logger.error("Entity not loaded: No unique result found for NativeQuery=[{}] with params=[{}].", query, params);
         }
         return t;
     }
 
     /**
-     * Carrega lista de entidades a partir de uma {@code @NamedQuery}. Também atribui os paramêtros de acordo com um {@code Map}.
+     * Loads entities from a {@code @NamedQuery}. Accepts param {@code Map} to fill the query.
      * 
-     * @param query {@code @NamedQuery} a ser carregada do banco de dados
-     * @param klazz {@code Class} da entidade a ter os registros retornados
-     * @param params {@code Map} de parâmetros com nome/valor dos parâmetros na {@code @NamedQuery}. Para queries sem parâmetros, passar um {@code Map} vazio.
-     * @return lista com as entidades retornadas pela {@code @NamedQuery}
+     * @param query {@code @NamedQuery} to be executed
+     * @param klazz {@code Class} type from expected entities
+     * @param params Parameters {@code Map} with key matching parameters in {@code @NamedQuery}. For queries without parameters, pass an empty {@code Map}.
+     * @return entity list returned from the database
      */
     @SuppressWarnings("unchecked")
     public <T> List<T> loadListByNamedQuery(String query, Class<T> klazz, Map<String, Object> params) {
         List<T> result = new ArrayList<T>();
         try {
-            logger.debug("Loading entity list " + klazz.getSimpleName() + " using @NamedQuery=[" + query + "], params=[" + params + "]");
+            logger.debug("Loading entity list {} using @NamedQuery=[{}], params=[{}]", new Object[] {klazz.getSimpleName(), query, params});
             result = getResultListByNamedQuery(query, params);
-            logger.debug("Entity list loaded successfully: " + klazz.getSimpleName());
+            logger.debug("Entity list loaded successfully: [{}]", klazz.getSimpleName());
         } catch(IllegalArgumentException e) {
-            logger.error("Entity list not loaded: Could not find @NamedQuery=[" + query + "] or @NamedQuery is invalid", e);
+            logger.error("Entity list not loaded: Could not find @NamedQuery=[{}] or @NamedQuery is invalid", query, e);
         }
         return result;
     }
@@ -195,11 +195,11 @@ public class JPAEntityDao {
     public <T> List<T> loadListByQuery(String query, Class<T> klazz, Map<String, Object> params) {
         List<T> result = new ArrayList<T>();
         try {
-            logger.debug("Loading entity list " + klazz.getSimpleName() + " using JPQuery=[" + query + "], params=[" + params + "]");
+            logger.debug("Loading entity list {} using JPQuery=[{}], params=[{}]", new Object[] {klazz.getSimpleName(), query, params});
             result = getResultListByQuery(query, params);
-            logger.debug("Entity list loaded successfully: " + klazz.getSimpleName());
+            logger.debug("Entity list loaded successfully: [{}]", klazz.getSimpleName());
         } catch(IllegalArgumentException e) {
-            logger.error("Entity list not loaded: Invalid JPQuery=[" + query + "]", e);
+            logger.error("Entity list not loaded: Invalid JPQuery=[{}]", query, e);
         }
         return result;
     }
@@ -208,11 +208,11 @@ public class JPAEntityDao {
     public List<Object[]> loadListByQuery(String query, Map<String, Object> params) {
         List result = new ArrayList();
         try {
-            logger.debug("Loading entity list using NativeQuery=[" + query + "], params=[" + params + "]");
+            logger.debug("Loading entity list using NativeQuery=[{}], params=[{}]", query, params);
             result = getResultListByQuery(query, params);
-            logger.debug("Entity list loaded successfully: NativeQuery=[" + query + "]");
+            logger.debug("Entity list loaded successfully: NativeQuery=[{}]", query);
         } catch(IllegalArgumentException e) {
-            logger.error("Entity list not loaded: Invalid NativeQuery=[" + query + "]", e);
+            logger.error("Entity list not loaded: Invalid NativeQuery=[{}]", query, e);
         }
         return result;
     }

@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 import javax.persistence.EntityExistsException;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.easyj.orm.EntityService;
 import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,7 +21,7 @@ public class JPAEntityService implements EntityService {
     @Resource(name="JPAEntityDao")
     private JPAEntityDao dao;
 
-    protected Log logger = LogFactory.getLog(getClass());
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public <T> String save(T t) {
