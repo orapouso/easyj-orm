@@ -15,6 +15,9 @@ public interface EntityService {
     public static final String NO_PARAMS_SET                     = "error.no.params";
     public static final String NULL_PARAM                        = "error.null.param";
     public static final String INVALID_PARAM                     = "error.invalid.param";
+    
+    public static final String PARAM_MAX_RESULTS = "maxResults";
+    public static final String PARAM_START_POSITION = "startPosition";
 
     public <T> String save(T t);
     public <T> int remove(Class<T> klazz, Map<String, Object> params);

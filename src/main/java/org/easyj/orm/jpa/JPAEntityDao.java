@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
+import org.easyj.orm.EntityService;
 import org.hibernate.PropertyValueException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
@@ -328,12 +329,12 @@ public class JPAEntityDao {
      */
     private boolean setParameters(Query q, Map<String, Object> params) {
         if(q != null && params != null) {
-            Integer maxResults = (Integer) params.remove("maxResults");
+            Integer maxResults = (Integer) params.remove(EntityService.PARAM_MAX_RESULTS);
             if(maxResults != null && maxResults > 0) {
                 q.setMaxResults(maxResults.intValue());
             }
 
-            Integer startPosition = (Integer) params.remove("startPosition");
+            Integer startPosition = (Integer) params.remove(EntityService.PARAM_START_POSITION);
             if(startPosition != null && startPosition > -1) {
                 q.setFirstResult(startPosition.intValue());
             }
