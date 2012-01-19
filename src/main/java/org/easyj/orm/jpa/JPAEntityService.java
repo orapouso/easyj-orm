@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.persistence.EntityExistsException;
 import javax.persistence.NamedQueries;
@@ -137,49 +139,47 @@ public class JPAEntityService implements EntityService {
     }
 
     protected <T> Map<String, Object> fillUKParams(T entity) {
-        String query = null;
-        String lowerQuery = null;
-        for(NamedQuery n : entity.getClass().getAnnotation(NamedQueries.class).value()) {
-            if(n.name().toLowerCase().indexOf(".findbyuk") > -1) {
-                query = n.query();
-                lowerQuery = query.toLowerCase();
-                break;
-            }
+        String query = getNamedQuery(entity.getClass().getSimpleName() + ".findByUK", entity.getClass());
+        if(query == null) {
+            return null;
         }
 
+        Pattern pattern = Pattern.compile("\\S+\\s*=\\s*:\\S+");
+        Matcher matcher = pattern.matcher(query);
+        Matcher param;
+        pattern = Pattern.compile(":\\S+");
 
         String[] props;
-        Object oParam;
+        String group;
+        Object paramValue;
         Map<String, Object> ukParams = new HashMap<String, Object>();
-
-        if(query != null) {
-            int ini = lowerQuery.indexOf(" where ") + " where ".length();
-            int end = lowerQuery.indexOf(" order by ");
-            query = query.substring(ini, end > -1 ? end : query.length()).trim();
-            String[] params = query.split(" and ");
-            for(String param : params) {
+        while(matcher.find()) {
+            group = matcher.group();
+            props = group.split("=")[0].trim().split("\\.");
+            paramValue = entity;
+            for(String prop : props) {
                 try {
-                    props = param.split("=")[0].trim().split("\\.");
-                    oParam = entity;
-                    for(String prop : props) {
-                        try {
-                            oParam = oParam.getClass().getMethod("get" + StringUtils.capitalize(prop)).invoke(oParam);
-                        } catch(Exception silent) {}
-                    }
-                    ukParams.put(param.split("=")[1].replace(":", ""), oParam);
-                } catch (Exception ex) {}
+                    paramValue = paramValue.getClass().getMethod("get" + StringUtils.capitalize(prop)).invoke(paramValue);
+                } catch(Exception silent) {}
+            }
+            param = pattern.matcher(group);
+            if(param.find()) {
+                ukParams.put(param.group().replace(":", "").trim(), paramValue);
             }
         }
-
+            
         return ukParams;
     }
 
-    protected <T> String getNamedQuery(String query, Class<T> klazz){
+    protected <T> String getNamedQuery(String queryName, Class<T> klazz){
         NamedQueries queries = klazz.getAnnotation(NamedQueries.class);
 
-        for(NamedQuery named : queries.value()) {
-            if(query.equals(named.name())) {
-                return named.query();
+        if(queries != null) {
+            queryName = queryName.toLowerCase();
+            for(NamedQuery named : queries.value()) {
+                if(queryName.equals(named.name().toLowerCase())) {
+                    return named.query();
+                }
             }
         }
 

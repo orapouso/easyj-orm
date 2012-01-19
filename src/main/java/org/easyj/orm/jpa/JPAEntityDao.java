@@ -117,7 +117,7 @@ public class JPAEntityDao {
         } catch(IllegalArgumentException e) {
             logger.error("Entity not loaded: Could not find @NamedQuery=[{}] or @NamedQuery is invalid", query, e);
         } catch(NoResultException e) {
-            logger.info("Entity not loaded: @NamedQuery=[{}], params=[{}] returned nothing", query, params);
+            logger.debug("Entity not loaded: @NamedQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
             logger.error("Entity not loaded: No unique result found for @NamedQuery=[{}] with params=[{}].", query, params);
         }
@@ -134,7 +134,7 @@ public class JPAEntityDao {
         } catch(IllegalArgumentException e) {
             logger.error("Entity not loaded: Invalid JPQuery=[{}]", query, e);
         } catch(NoResultException e) {
-            logger.info("Entity not loaded: JPQuery=[{}], params=[{}] returned nothing", query, params);
+            logger.debug("Entity not loaded: JPQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
             logger.error("Entity not loaded: No unique result found for JPQuery=[{}] with params=[{}].", query, params);
         }
@@ -149,7 +149,7 @@ public class JPAEntityDao {
             o = getSingleResultByNativeQuery(query, params);
             logger.debug("Query loaded successfully: NativeQuery=[{}], object=[{}]", query, o);
         } catch (NoResultException e) {
-            logger.info("Query not loaded: NativeQuery=[{}], params=[{}] returned nothing", query, params);
+            logger.debug("Query not loaded: NativeQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
             logger.error("Query not loaded: No unique result found for NativeQuery=[{}] with params=[{}].", query, params);
         }
@@ -164,7 +164,7 @@ public class JPAEntityDao {
             t = (T) getSingleResultByNativeQuery(query, params);
             logger.debug("Entity loaded successfully: {} [{}]", klazz.getSimpleName(), t);
         } catch (NoResultException e) {
-            logger.info("Entity not loaded: NativeQuery=[{}], params=[{}] returned nothing", query, params);
+            logger.debug("Entity not loaded: NativeQuery=[{}], params=[{}] returned nothing", query, params);
         } catch (NonUniqueResultException e) {
             logger.error("Entity not loaded: No unique result found for NativeQuery=[{}] with params=[{}].", query, params);
         }
