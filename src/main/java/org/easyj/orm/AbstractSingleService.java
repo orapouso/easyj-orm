@@ -9,6 +9,10 @@ public abstract class AbstractSingleService implements SingleService {
 
     protected SingleDao dao;
 
+    public abstract void setDao(SingleDao dao);
+    
+    public abstract SingleDao getDao();
+
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -60,7 +64,5 @@ public abstract class AbstractSingleService implements SingleService {
     public <E> List<E> findListByNativeQuery(String query, Class<E> klazz, Map<String, Object> params) {
         return getDao().findListByNativeQuery(query, klazz, params);
     }
-
-    protected abstract SingleDao getDao();
 
 }

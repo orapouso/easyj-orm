@@ -18,10 +18,8 @@ import org.easyj.orm.GenericDao;
 import org.easyj.orm.EntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository
 @Transactional
 public class GenericJPAEntityDao <E extends Serializable, ID> implements GenericDao <E , ID> {
 

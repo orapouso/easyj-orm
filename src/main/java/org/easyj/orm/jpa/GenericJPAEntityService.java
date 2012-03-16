@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Resource;
 import javax.persistence.EntityExistsException;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -17,13 +16,10 @@ import org.easyj.orm.GenericService;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-@Service
 public class GenericJPAEntityService<E extends Serializable, ID> implements GenericService< E, ID > {
 
-    @Resource(name="GenericJPAEntityDao")
     protected GenericJPAEntityDao<E, ID> dao;
 
     protected Class<E> entityClass;
