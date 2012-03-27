@@ -106,6 +106,15 @@
         <httpclient.version>4.1.2</httpclient.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>deploy</id>
+            <build>
+                <defaultGoal>deploy</defaultGoal>
+            </build>
+        </profile>
+    </profiles>
+
     <distributionManagement>
         <repository>
             <id>releases</id>
