@@ -69,7 +69,7 @@ public class SingleJPAEntityDao extends AbstractSingleDao {
 
     @Override
     protected <E> List<E> getResultListByQuery(String query, Map<String, Object> params, Class<E> klazz, QueryType queryType) {
-        List result = new ArrayList();
+        List<E> result = new ArrayList<E>();
         TypedQuery<E> q = null;
         try {
             if(QueryType.JPQL.equals(queryType)) {
