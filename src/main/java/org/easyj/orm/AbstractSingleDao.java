@@ -62,7 +62,9 @@ public abstract class AbstractSingleDao implements SingleDao {
      */
     @Override
     public <E> E delete(E entity) {
-        remove(entity);
+        if(entity != null) {
+            remove(entity);
+        }
         
         return entity;
     }
@@ -78,9 +80,7 @@ public abstract class AbstractSingleDao implements SingleDao {
     public <E, ID> E delete(Class<E> klazz, ID primarykey) {
         E entity = findOne(klazz, primarykey);
         
-        delete(entity);
-        
-        return entity;
+        return delete(entity);
     }
 
     @SuppressWarnings("unchecked")

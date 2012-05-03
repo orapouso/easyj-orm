@@ -27,7 +27,7 @@ public abstract class AbstractSingleService implements SingleService {
 
     @Override
     public <E, ID> E delete(Class<E> klazz, ID id) {
-        return dao.delete(klazz, id);
+        return getDao().delete(klazz, id);
     }
 
     @Override
