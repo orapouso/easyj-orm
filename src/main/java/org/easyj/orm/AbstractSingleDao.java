@@ -1,3 +1,19 @@
+/*
+ *  Copyright 2009-2012 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 package org.easyj.orm;
 
 import java.util.List;
@@ -6,6 +22,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Abstract {@code Dao} that defines access methods to {@code @Services}
+ * <br><br>
+ * Concrete classes need to implement technology (JPA, JDBC) specific methods
+ * 
+ * @author Rafael Raposo
+ * @since 1.1.0
+ */
 @Transactional
 public abstract class AbstractSingleDao implements SingleDao {
     
@@ -43,7 +67,7 @@ public abstract class AbstractSingleDao implements SingleDao {
     }
 
     /**
-     * Executes an update using a database driven native query defined inside an entity
+     * Executes an update using a database driven native query
      * 
      * @param query query to be compiled and executed
      * @param params parameters to fill into the query. Can be null if there are no parameters
@@ -56,8 +80,7 @@ public abstract class AbstractSingleDao implements SingleDao {
     /**
      * Removes entity from database
      * 
-     * @param klazz Entity {@code Class}
-     * @param primaryKey Entity's primary key value
+     * @param entity Entity to be removed
      * @return removed entity
      */
     @Override
@@ -77,8 +100,8 @@ public abstract class AbstractSingleDao implements SingleDao {
      * @return removed entity
      */
     @Override
-    public <E, ID> E delete(Class<E> klazz, ID primarykey) {
-        E entity = findOne(klazz, primarykey);
+    public <E, ID> E delete(Class<E> klazz, ID primaryKey) {
+        E entity = findOne(klazz, primaryKey);
         
         return delete(entity);
     }
@@ -135,7 +158,7 @@ public abstract class AbstractSingleDao implements SingleDao {
      * Returns a query string from the parameters given
      * 
      * @param params
-     * @return 
+     * @return query string
      */
     protected String queryParams(Map<String, Object> params) {
         if(params == null) return "";
