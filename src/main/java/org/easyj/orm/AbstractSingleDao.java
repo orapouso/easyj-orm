@@ -18,6 +18,7 @@ package org.easyj.orm;
 
 import java.util.List;
 import java.util.Map;
+import javax.persistence.NoResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,15 +111,22 @@ public abstract class AbstractSingleDao implements SingleDao {
     @Override
     public <E> E findByQuery(String query, Class<E> klazz, Map<String, Object> params) {
         if(query.toLowerCase().indexOf("from ") > -1) {
-            return getSingleResultByQuery(query, params, klazz, QueryType.JPQL);
+            return findSingleResultByQuery(query, params, klazz, QueryType.JPQL);
         }
-        return getSingleResultByQuery(query, params, klazz, QueryType.NAMED);
+        return findSingleResultByQuery(query, params, klazz, QueryType.NAMED);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <E> E findByNativeQuery(String query, Class<E> klazz, Map<String, Object> params) {
-        return getSingleResultByQuery(query, params, klazz, QueryType.NATIVE);
+        return findSingleResultByQuery(query, params, klazz, QueryType.NATIVE);
+    }
+    
+    public <E> E findSingleResultByQuery(String query, Map<String, Object> params, Class<E> klazz, QueryType type) {
+        try {
+            return getSingleResultByQuery(query, klazz, params, type);
+        } catch(NoResultException ex) {}
+        return null;
     }
 
     /**
@@ -133,15 +141,15 @@ public abstract class AbstractSingleDao implements SingleDao {
     @Override
     public <E> List<E> findListByQuery(String query, Class<E> klazz, Map<String, Object> params) {
         if(query.toLowerCase().indexOf("from ") > -1) {
-            return getResultListByQuery(query, params, klazz, QueryType.JPQL);
+            return getResultListByQuery(query, klazz, params, QueryType.JPQL);
         }
-        return getResultListByQuery(query, params, klazz, QueryType.NAMED);
+        return getResultListByQuery(query, klazz, params, QueryType.NAMED);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <E> List<E> findListByNativeQuery(String query, Class<E> klazz, Map<String, Object> params) {
-        return (List<E>) getResultListByQuery(query, params, klazz, QueryType.NATIVE);
+        return (List<E>) getResultListByQuery(query, klazz, params, QueryType.NATIVE);
     }
 
     protected abstract <E> E merge(E entity);
@@ -150,9 +158,9 @@ public abstract class AbstractSingleDao implements SingleDao {
     
     protected abstract int executeUpdate(String query, Map<String, Object> params, QueryType queryType);
 
-    protected abstract <E> E getSingleResultByQuery(String query, Map<String, Object> params, Class<E> klazz, QueryType queryType);
+    protected abstract <E> E getSingleResultByQuery(String query, Class<E> klazz, Map<String, Object> params, QueryType queryType);
 
-    protected abstract <E> List<E> getResultListByQuery(String query, Map<String, Object> params, Class<E> klazz, QueryType queryType);
+    protected abstract <E> List<E> getResultListByQuery(String query, Class<E> klazz, Map<String, Object> params, QueryType queryType);
 
     /**
      * Returns a query string from the parameters given

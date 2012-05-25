@@ -71,7 +71,7 @@ public class SingleJPAEntityDao extends AbstractSingleDao {
     }
 
     @Override
-    protected <E> E getSingleResultByQuery(String query, Map<String, Object> params, Class<E> klazz, QueryType queryType) {
+    protected <E> E getSingleResultByQuery(String query, Class<E> klazz, Map<String, Object> params, QueryType queryType) {
         E entity = null;
         TypedQuery<E> q = null;
         try {
@@ -90,7 +90,7 @@ public class SingleJPAEntityDao extends AbstractSingleDao {
     }
 
     @Override
-    protected <E> List<E> getResultListByQuery(String query, Map<String, Object> params, Class<E> klazz, QueryType queryType) {
+    protected <E> List<E> getResultListByQuery(String query, Class<E> klazz, Map<String, Object> params, QueryType queryType) {
         List<E> result = new ArrayList<E>();
         TypedQuery<E> q = null;
         try {
@@ -189,7 +189,7 @@ public class SingleJPAEntityDao extends AbstractSingleDao {
 
     @Override
     public <E> List<E> findAll(Class<E> klazz, Map<String, Object> params) {
-        return findListByQuery("FROM " + klazz.getName() + queryParams(params), klazz, params);
+        return findListByQuery("FROM " + klazz.getName() + " c " + queryParams(params), klazz, params);
     }
 
 }
