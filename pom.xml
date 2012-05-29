@@ -4,7 +4,7 @@
     <groupId>org.easyj</groupId>
     <artifactId>easyj-orm</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
     <name>EasyJ ORM ${project.version}</name>
     <url>http://maven.apache.org</url>
     <dependencies>
