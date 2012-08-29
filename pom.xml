@@ -1,12 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.easyj</groupId>
+        <artifactId>easyj</artifactId>
+        <version>1.2.0</version>
+        <relativePath>../parent</relativePath>
+    </parent>  
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.easyj</groupId>
     <artifactId>easyj-orm</artifactId>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
-    <version>1.1.0</version>
     <name>EasyJ ORM ${project.version}</name>
-    <url>http://maven.apache.org</url>
+
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -18,130 +24,13 @@
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
-                <scope>test</scope>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <version>${org.hamcrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <version>${org.hamcrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
-    <build>
-        <finalName>${project.artifactId}-${project.version}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8.1</version>
-            </plugin>
-        </plugins>
-    </build>
-
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <!-- Deps Versions -->
         <hibernate.version>4.0.0.Final</hibernate.version>
-        <spring.version>3.1.1.RELEASE</spring.version>
-        <slf4j.version>1.6.4</slf4j.version>
-        
-        <!-- Testing -->
-        <commons-lang3.version>3.1</commons-lang3.version>
-        <org.hamcrest.version>1.3.RC2</org.hamcrest.version>
-        <junit.version>4.10</junit.version>
-        <mockito.version>1.9.0</mockito.version>
-        <httpclient.version>4.1.2</httpclient.version>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>deploy</id>
-            <build>
-                <defaultGoal>deploy</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <!-- <build>, <profiles>, <distributionManagement> inherited from parent pom -->    
 
-    <distributionManagement>
-        <repository>
-            <id>easy-releases</id>
-            <url>http://nexus.easyj.org/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>easy-snapshots</id>
-            <url>http://nexus.easyj.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>

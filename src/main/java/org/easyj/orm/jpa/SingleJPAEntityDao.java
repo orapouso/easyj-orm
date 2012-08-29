@@ -25,7 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.easyj.orm.AbstractSingleDao;
-import org.easyj.orm.SingleService;
+import org.easyj.orm.SingleDao;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -44,7 +44,7 @@ public class SingleJPAEntityDao extends AbstractSingleDao {
     protected <E> E merge(E entity) {
         E newT = null;
         try {
-            newT = em.merge(entity);
+            newT = getEm().merge(entity);
         } finally {
             closeEm();
         }
@@ -57,9 +57,9 @@ public class SingleJPAEntityDao extends AbstractSingleDao {
         int result = -1;
         try {
             if(query.toLowerCase().startsWith("update ") || query.toLowerCase().startsWith("insert into") || query.toLowerCase().startsWith("delete from ")) {
-                q = em.createNativeQuery(query);
+                q = getEm().createNativeQuery(query);
             } else {
-                q = em.createNamedQuery(query);
+                q = getEm().createNamedQuery(query);
             }
             if(setParameters(q, params)) {
                 result = q.executeUpdate();
@@ -121,12 +121,12 @@ public class SingleJPAEntityDao extends AbstractSingleDao {
      */
     private boolean setParameters(Query q, Map<String, Object> params) {
         if(q != null && params != null) {
-            Integer maxResults = (Integer) params.remove(SingleService.PARAM_MAX_RESULTS);
+            Integer maxResults = (Integer) params.remove(SingleDao.PARAM_MAX_RESULTS);
             if(maxResults != null && maxResults > 0) {
                 q.setMaxResults(maxResults.intValue());
             }
 
-            Integer startPosition = (Integer) params.remove(SingleService.PARAM_START_POSITION);
+            Integer startPosition = (Integer) params.remove(SingleDao.PARAM_START_POSITION);
             if(startPosition != null && startPosition > -1) {
                 q.setFirstResult(startPosition.intValue());
             }

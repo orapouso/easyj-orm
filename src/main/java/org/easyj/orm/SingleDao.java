@@ -27,6 +27,9 @@ import java.util.Map;
  */
 public interface SingleDao {
 
+    public static final String PARAM_MAX_RESULTS = "maxResults";
+    public static final String PARAM_START_POSITION = "startPosition";
+
     public static enum QueryType {NAMED, JPQL, NATIVE};
 
     public <E> E save(E entity);
