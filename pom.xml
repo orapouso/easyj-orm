@@ -3,13 +3,13 @@
     <parent>
         <groupId>org.easyj</groupId>
         <artifactId>easyj</artifactId>
-        <version>1.2.0</version>
-        <relativePath>../parent</relativePath>
+        <version>1.2.1</version>
+        <relativePath>../easyj-parent</relativePath>
     </parent>  
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>easyj-orm</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <packaging>jar</packaging>
     <name>EasyJ ORM ${project.version}</name>
 
@@ -26,11 +26,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <!-- Deps Versions -->
-        <hibernate.version>4.0.0.Final</hibernate.version>
-    </properties>
-
-    <!-- <build>, <profiles>, <distributionManagement> inherited from parent pom -->    
+    <!-- <build>, <properties>, <profiles>, <distributionManagement> inherited from parent pom -->    
 
 </project>
